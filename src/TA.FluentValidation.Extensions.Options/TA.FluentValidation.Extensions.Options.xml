@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>TA.FluentValidation.Extensions.Options</name>
+    </assembly>
+    <members>
+        <member name="T:TA.FluentValidation.Extensions.Options.OptionsBuilderExtensions">
+            <summary>
+            Extensions to validate <see cref="T:Microsoft.Extensions.Options.IOptions`1"/> with <see cref="T:FluentValidation.IValidator`1"/>.
+            </summary>
+        </member>
+        <member name="M:TA.FluentValidation.Extensions.Options.OptionsBuilderExtensions.ValidateWithFluentValidation``1(Microsoft.Extensions.Options.OptionsBuilder{``0})">
+            <summary>
+            Validate <typeparamref name="TOptions"/> with <see cref="T:FluentValidation.IValidator`1"/>.
+            TODO: kiedy to sie dzieje.
+            </summary>
+            <typeparam name="TOptions">Class to be validated.</typeparam>
+            <param name="optionsBuilder">The options type to be configured.</param>
+            <returns>
+            The <see cref="T:Microsoft.Extensions.Options.OptionsBuilder`1"/>
+            so that additional calls can be chained.
+            </returns>
+        </member>
+        <member name="T:TA.FluentValidation.Extensions.Options.ServiceCollectionExtensions">
+            <summary>
+            Extensions to validate <see cref="T:Microsoft.Extensions.Options.IOptions`1"/>
+            with <see cref="T:FluentValidation.IValidator`1"/> on startup.
+            </summary>
+        </member>
+        <member name="M:TA.FluentValidation.Extensions.Options.ServiceCollectionExtensions.AddStartupFilterToValidateOptionsWithFluentValidation(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Validate on application startup all <see cref="T:Microsoft.Extensions.Options.IOptions`1"/>
+            marked for validation with
+            <see cref="M:TA.FluentValidation.Extensions.Options.OptionsBuilderExtensions.ValidateWithFluentValidation``1(Microsoft.Extensions.Options.OptionsBuilder{``0})"/> .
+            </summary>
+            <param name="services">The Microsoft.Extensions.DependencyInjection.IServiceCollection to add services to.</param>
+            <returns>
+             An Microsoft.Extensions.DependencyInjection.IMvcBuilder that can be used to further configure the MVC services.
+            </returns>
+        </member>
+    </members>
+</doc>
