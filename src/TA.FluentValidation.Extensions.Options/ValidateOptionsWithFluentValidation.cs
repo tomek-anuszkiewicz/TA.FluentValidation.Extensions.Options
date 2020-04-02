@@ -10,7 +10,7 @@ namespace TA.FluentValidation.Extensions.Options
 
         public ValidateOptionsWithFluentValidation(IValidator<TOptions> validator)
         {
-            _validator = validator;
+            _validator = validator ?? throw new System.ArgumentNullException(nameof(validator));
         }
 
         public ValidateOptionsResult Validate(string name, TOptions options)

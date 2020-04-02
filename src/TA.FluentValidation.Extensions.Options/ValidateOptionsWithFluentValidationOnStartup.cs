@@ -1,5 +1,5 @@
-﻿using System;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
+using System;
 
 namespace TA.FluentValidation.Extensions.Options
 {
@@ -10,7 +10,7 @@ namespace TA.FluentValidation.Extensions.Options
 
         public ValidateOptionsWithFluentValidationOnStartup(IOptions<TOptions> options)
         {
-            _options = options;
+            _options = options ?? throw new ArgumentNullException(nameof(options));
         }
 
         public void Validate()

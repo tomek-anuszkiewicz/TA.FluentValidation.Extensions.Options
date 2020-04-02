@@ -20,6 +20,9 @@ namespace TA.FluentValidation.Extensions.Options
         /// </returns>
         public static IServiceCollection AddStartupFilterToValidateOptionsWithFluentValidation(this IServiceCollection services)
         {
+            if (services is null)
+                throw new System.ArgumentNullException(nameof(services));
+
             services.AddTransient<IStartupFilter, ValidateOptionsWithFluentValidationStartupFilter>();
             return services;
         }

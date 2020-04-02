@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using System;
+using System.Collections.Generic;
 
 namespace TA.FluentValidation.Extensions.Options
 {
@@ -11,7 +11,7 @@ namespace TA.FluentValidation.Extensions.Options
 
         public ValidateOptionsWithFluentValidationStartupFilter(IEnumerable<IValidateOptionsWithFluentValidationOnStartup> startupValidators)
         {
-            _startupValidators = startupValidators;
+            _startupValidators = startupValidators ?? throw new ArgumentNullException(nameof(startupValidators));
         }
 
         public Action<IApplicationBuilder> Configure(Action<IApplicationBuilder> next)

@@ -1,0 +1,22 @@
+# Remove the line below if you want to inherit .editorconfig settings from higher directories
+#root = true
+
+# C# files
+[*.cs]
+
+#### .NET Coding Conventions ####
+
+# IDE0039: Use local function
+csharp_style_pattern_local_over_anonymous_function = false:suggestion
+
+# CA1707: Identifiers should not contain underscores
+dotnet_diagnostic.CA1707.severity = none
+
+# SA1201: Elements should appear in the correct order
+dotnet_diagnostic.SA1201.severity = none
+
+# SA1116: Split parameters should start on line after declaration
+dotnet_diagnostic.SA1116.severity = none
+
+# CS1591: Missing XML comment for publicly visible type or member
+dotnet_diagnostic.CS1591.severity = none

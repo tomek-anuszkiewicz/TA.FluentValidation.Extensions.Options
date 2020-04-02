@@ -1,6 +1,6 @@
-﻿using System.Linq;
-using FluentValidation.Results;
+﻿using FluentValidation.Results;
 using Microsoft.Extensions.Options;
+using System.Linq;
 
 namespace TA.FluentValidation.Extensions.Options
 {
@@ -8,6 +8,9 @@ namespace TA.FluentValidation.Extensions.Options
     {
         public static ValidateOptionsResult ToValidateOptionsResult(this ValidationResult validationResult)
         {
+            if (validationResult is null)
+                throw new System.ArgumentNullException(nameof(validationResult));
+
             if (validationResult.IsValid)
                 return ValidateOptionsResult.Success;
             else
