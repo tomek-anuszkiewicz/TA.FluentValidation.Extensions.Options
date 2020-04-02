@@ -22,10 +22,8 @@ namespace ValidationOnStartup
         {
             services
                 .AddControllers()
-                // https://docs.fluentvalidation.net/en/latest/aspnet.html
                 .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>());
 
-            // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/options?view=aspnetcore-3.1
             services
                 .AddOptions<PersonSettings>()
                 .Bind(Configuration.GetSection(nameof(PersonSettings)))
