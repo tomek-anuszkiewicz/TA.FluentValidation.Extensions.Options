@@ -12,6 +12,7 @@
     <Product />
     <PackageTags>FluentValidation Options</PackageTags>
     <PackageReleaseNotes />
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

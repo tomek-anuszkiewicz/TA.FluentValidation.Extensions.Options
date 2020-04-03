@@ -1,0 +1,34 @@
+trigger:
+- master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  buildConfiguration: 'Release'
+  major: 1
+  minor: 0
+  coverageresultfile: 'coverage.cobertura.xml'
+  coverageresultdirectory: '$(Build.SourcesDirectory)/TestResults/Coverage/'
+
+name: $(major).$(minor)$(Rev:.r)
+
+steps:
+
+- task: DotNetCoreCLI@2
+  displayName: dotnet build
+  inputs:
+    command: build
+    arguments: '--configuration $(buildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  displayName: dotnet test
+  inputs:
+    command: 'test'
+    arguments: '--configuration $(buildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(coverageresultdirectory)'
+
+- task: PublishCodeCoverageResults@1
+  inputs:
+    codeCoverageTool: 'Cobertura'
+    summaryFileLocation: '$(coverageresultdirectory)/$(coverageresultfile)'
+    reportDirectory: '$(coverageresultdirectory)/Report/'
