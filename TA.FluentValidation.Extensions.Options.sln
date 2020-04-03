@@ -9,6 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Solution Items", "_Solutio
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
 		README.md = README.md
+		todo.txt = todo.txt
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{913E0850-4B81-435A-AF58-6E1814751602}"
@@ -23,7 +24,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ValidationOnStartup", "samp
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{2BACDD2B-0AFF-4179-B7C1-6E5FA64357AD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TA.FluentValidation.Extensions.Options.Tests", "tests\TA.FluentValidation.Extensions.Options.Tests\TA.FluentValidation.Extensions.Options.Tests.csproj", "{CB49A006-36D3-4D39-95BA-9FAD49EE1A08}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TA.FluentValidation.Extensions.Options.Tests", "tests\TA.FluentValidation.Extensions.Options.Tests\TA.FluentValidation.Extensions.Options.Tests.csproj", "{CB49A006-36D3-4D39-95BA-9FAD49EE1A08}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Solution Items", "_Solution Items", "{A11809DE-57E8-4F53-9359-DDB6233FD894}"
 	ProjectSection(SolutionItems) = preProject

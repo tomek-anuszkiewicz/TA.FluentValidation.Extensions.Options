@@ -1,5 +1,4 @@
-
-With this package you can easily validate your configuration with [FluentValidation](https://docs.fluentvalidation.net/en/latest/index.html). 
+With this package you can easily validate your configuration with [FluentValidation](https://fluentvalidation.net/). 
 You may also opt-in to trigger validation on startup. 
 
 ### 1. Prerequisites
@@ -7,7 +6,7 @@ You may also opt-in to trigger validation on startup.
 Configuration is configured. 
 See [Configuration in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration)
 
-Options and configuration are binded. See [Options pattern in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/options)
+Options and configuration are bound. See [Options pattern in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/options)
 
 Code example: 
 
@@ -17,7 +16,7 @@ services
     .Bind(Configuration.GetSection(nameof(SomeSettings)));
 ```
 
-So basicly you can ask for `IOptions<TOptions>` from container (where TOptions is class binded to configuration section).
+So basically you can ask for `IOptions<TOptions>` from container (where class TOptions is bound to configuration section).
 
 You have FluentValidator for `TOptions`. See [Creating your first validator](https://docs.fluentvalidation.net/en/latest/start.html)
 
@@ -31,7 +30,7 @@ services
     .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>());
 ```
 
-Note: Alas in example on page [ASP.NET Core integration](https://docs.fluentvalidation.net/en/latest/aspnet.html)
+Note: In examples on page [ASP.NET Core integration](https://docs.fluentvalidation.net/en/latest/aspnet.html)
 we see: `services.AddMvc`, it's also works with `services.AddControllers()` in 
 case `API project` was created.
 
@@ -70,9 +69,7 @@ you may find
 services.Configure<MyOptions>(Configuration);
 ```
 
-, this syntax doesn't give access to fluent [OptionsBuilder](https://docs.microsoft.com/en-us/dotnet/api/microsoft.extensions.options.optionsbuilder-1)
+, this syntax don't give access to fluent [OptionsBuilder](https://docs.microsoft.com/en-us/dotnet/api/microsoft.extensions.options.optionsbuilder-1)
 and thus to configure validation.
 
-On my machine I have some trouble to run sample `ValidationOnStartup` in debug. Application hung up.
-
-TODO: grammar, links
+On my machine I had some trouble to run sample `ValidationOnStartup` in debug. Application hung up.
