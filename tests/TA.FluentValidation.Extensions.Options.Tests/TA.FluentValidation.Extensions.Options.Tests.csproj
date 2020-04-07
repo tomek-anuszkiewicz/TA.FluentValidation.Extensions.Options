@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>D:\Programowanie\C#\Moje programy\TA.FluentValidation.Extensions.Options\tests\TA.FluentValidation.Extensions.Options.Tests\TA.FluentValidation.Extensions.Options.Tests.xml</DocumentationFile>
+    <DocumentationFile>TA.FluentValidation.Extensions.Options.Tests.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

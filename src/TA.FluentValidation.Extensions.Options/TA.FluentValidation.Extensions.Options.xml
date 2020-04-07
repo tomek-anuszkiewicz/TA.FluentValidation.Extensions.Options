@@ -6,13 +6,12 @@
     <members>
         <member name="T:TA.FluentValidation.Extensions.Options.OptionsBuilderExtensions">
             <summary>
-            Extensions to validate <see cref="T:Microsoft.Extensions.Options.IOptions`1"/> with <see cref="T:FluentValidation.IValidator`1"/>.
+            Extensions to validate options with <see cref="T:FluentValidation.IValidator`1"/>.
             </summary>
         </member>
         <member name="M:TA.FluentValidation.Extensions.Options.OptionsBuilderExtensions.ValidateWithFluentValidation``1(Microsoft.Extensions.Options.OptionsBuilder{``0})">
             <summary>
-            Validate <typeparamref name="TOptions"/> with <see cref="T:FluentValidation.IValidator`1"/>.
-            TODO: kiedy to sie dzieje.
+            Validate <typeparamref name="TOptions"/> with <see cref="T:FluentValidation.IValidator`1"/>.<br/>
             </summary>
             <typeparam name="TOptions">Class to be validated.</typeparam>
             <param name="optionsBuilder">The options type to be configured.</param>
