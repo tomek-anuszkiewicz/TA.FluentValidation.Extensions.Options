@@ -1,17 +1,11 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Description>Validate Microsoft.Extensions.Options with FluentValidation</Description>
     <PackageProjectUrl>https://github.com/tomek-anuszkiewicz/TA.FluentValidation.Extensions.Options</PackageProjectUrl>
     <RepositoryUrl>https://github.com/tomek-anuszkiewicz/TA.FluentValidation.Extensions.Options</RepositoryUrl>
-    <PackageLicenseFile></PackageLicenseFile>
-    <Authors>Tomasz Anuszkiewicz</Authors>
-    <Company />
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Product />
     <PackageTags>FluentValidation Options</PackageTags>
-    <PackageReleaseNotes />
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 

@@ -1,0 +1,7 @@
+<Project>
+  <PropertyGroup>
+    <Authors>Tomasz Anuszkiewicz</Authors>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Company />
+  </PropertyGroup>
+</Project>
