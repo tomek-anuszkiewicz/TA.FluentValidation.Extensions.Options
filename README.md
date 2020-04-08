@@ -1,6 +1,14 @@
 With this package you can easily validate your configuration with [FluentValidation](https://fluentvalidation.net/). 
 You may also opt-in to trigger validation on startup. 
 
+![](https://dev.azure.com/tomekanuszkiewicz/TA.FluentValidation.Extensions.Options/_apis/build/status/tomek-anuszkiewicz.TA.FluentValidation.Extensions.Options?branchName=master) 
+&nbsp;
+![Azure DevOps tests](https://img.shields.io/azure-devops/tests/tomekanuszkiewicz/TA.FluentValidation.Extensions.Options/1)
+&nbsp;
+![Azure DevOps coverage](https://img.shields.io/azure-devops/coverage/tomekanuszkiewicz/TA.FluentValidation.Extensions.Options/1)
+&nbsp;
+![GitHub](https://img.shields.io/github/license/tomek-anuszkiewicz/TA.FluentValidation.Extensions.Options)
+
 ### 1. Prerequisites
 
 Configuration is configured. 
