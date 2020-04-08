@@ -6,29 +6,98 @@ pool:
 
 variables:
   buildConfiguration: 'Release'
-  major: 1
-  minor: 0
-  coverageresultfile: 'coverage.cobertura.xml'
-  coverageresultdirectory: '$(Build.SourcesDirectory)/TestResults/Coverage/'
-
-name: $(major).$(minor)$(Rev:.r)
+  coverageResultFile: 'coverage.cobertura.xml'
+  coverageResultFolder: '$(Build.SourcesDirectory)/TestResults/Coverage/'
+  nugetFolder: '$(Build.SourcesDirectory)/src/TA.FluentValidation.Extensions.Options/bin/Release'
+  nugetFile: 'TA.FluentValidation.Extensions.Options.*.nupkg'
 
 steps:
+
+- task: DotNetCoreCLI@2
+  displayName: install gitversion
+  inputs:
+    command: 'custom'
+    custom: 'tool'
+    arguments: 'install gitversion.tool --tool-path .'
+    includeNuGetOrg: true
+
+- task: PowerShell@2
+  displayName: add gitversion variables
+  inputs:
+    targetType: 'inline'
+    script: |
+      $SemVer = ./dotnet-gitversion /showVariable SemVer
+      $AssemblySemVer = ./dotnet-gitversion /showVariable AssemblySemVer
+      $AssemblySemFileVer = ./dotnet-gitversion /showVariable AssemblySemFileVer
+      Write-Host "##vso[task.setvariable variable=MajorMinorPatch;]$MajorMinorPatch"
+      Write-Host "##vso[task.setvariable variable=SemVer;]$SemVer"
+      Write-Host "##vso[task.setvariable variable=AssemblySemVer;]$AssemblySemVer"
+      Write-Host "##vso[task.setvariable variable=AssemblySemFileVer;]$AssemblySemFileVer"
+
+- task: DotNetCoreCLI@2
+  displayName: dotnet clean
+  inputs:
+    command: 'custom'
+    custom: 'clean'
+    arguments: '--configuration $(buildConfiguration)'
 
 - task: DotNetCoreCLI@2
   displayName: dotnet build
   inputs:
     command: build
-    arguments: '--configuration $(buildConfiguration)'
+    arguments: >-
+      --configuration $(buildConfiguration)
+      -p:Version=$(SemVer)
+      -p:AssemblyVersion=$(AssemblySemVer)
+      -p:FileVersion=$(AssemblySemFileVer)
 
 - task: DotNetCoreCLI@2
   displayName: dotnet test
   inputs:
     command: 'test'
-    arguments: '--configuration $(buildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(coverageresultdirectory)'
+    arguments: >-
+      --configuration $(buildConfiguration) 
+      --no-build
+      -p:CollectCoverage=true 
+      -p:CoverletOutputFormat=cobertura 
+      -p:CoverletOutput=$(coverageResultFolder)
 
 - task: PublishCodeCoverageResults@1
   inputs:
     codeCoverageTool: 'Cobertura'
-    summaryFileLocation: '$(coverageresultdirectory)/$(coverageresultfile)'
-    reportDirectory: '$(coverageresultdirectory)/Report/'
+    summaryFileLocation: '$(coverageResultFolder)/$(coverageResultFile)'
+    reportDirectory: '$(coverageResultFolder)/Report/'
+
+- task: CopyFiles@2
+  displayName: copy nuget for push
+  inputs:
+    SourceFolder: '$(nugetFolder)'
+    Contents: '$(nugetFile)'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+- task: DotNetCoreCLI@2
+  displayName: push
+  inputs:
+    command: 'push'
+    packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
+    nuGetFeedType: 'internal'
+    publishVstsFeed: '4d1c4152-03cc-47a1-aee1-10900ef42719/fded308d-c9f7-48bb-a54c-c44843317463'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    pathToPublish: $(Build.ArtifactStagingDirectory)
+    artifactName: Nuget package
+
+- task: GitHubRelease@1
+  displayName: create github release
+  inputs:  
+    gitHubConnection: 'github.com_tomek-anuszkiewicz'
+    repositoryName: '$(Build.Repository.Name)'
+    action: 'create'
+    target: '$(Build.SourceVersion)'
+    tagSource: 'userSpecifiedTag'
+    tag: '$(SemVer)'
+    releaseNotesSource: 'inline'
+    assets: '$(Build.ArtifactStagingDirectory)/*.nupkg'
+    changeLogCompareToRelease: 'lastFullRelease'
+    changeLogType: 'commitBased'
