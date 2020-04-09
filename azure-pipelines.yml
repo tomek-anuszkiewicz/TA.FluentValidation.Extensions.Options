@@ -6,7 +6,6 @@ pool:
 
 variables:
   buildConfiguration: 'Release'
-  coverageResultFile: 'coverage.cobertura.xml'
   coverageResultFolder: '$(Build.SourcesDirectory)/TestResults/Coverage/'
   NUGET_PACKAGES: $(Pipeline.Workspace)/.nuget/packages
 
@@ -26,18 +25,16 @@ steps:
     arguments: 'install gitversion.tool --tool-path .'
     includeNuGetOrg: true
 
-- task: PowerShell@2
-  displayName: add gitversion variables
+
+- script: ./dotnet-gitversion > gitversion.json
+  displayName: get gitversion
+
+- task: oneLuckiDevJson2Variable@1
+  displayName: parse gitversion
   inputs:
-    targetType: 'inline'
-    script: |
-      $SemVer = ./dotnet-gitversion /showVariable SemVer
-      $AssemblySemVer = ./dotnet-gitversion /showVariable AssemblySemVer
-      $AssemblySemFileVer = ./dotnet-gitversion /showVariable AssemblySemFileVer
-      Write-Host "##vso[task.setvariable variable=MajorMinorPatch;]$MajorMinorPatch"
-      Write-Host "##vso[task.setvariable variable=SemVer;]$SemVer"
-      Write-Host "##vso[task.setvariable variable=AssemblySemVer;]$AssemblySemVer"
-      Write-Host "##vso[task.setvariable variable=AssemblySemFileVer;]$AssemblySemFileVer"
+    jsonFile: 'gitversion.json'
+    shouldPrefixVariables: true
+    variablePrefix: 'gitversion'
 
 - task: DotNetCoreCLI@2
   displayName: dotnet clean
@@ -53,9 +50,9 @@ steps:
     includeNuGetOrg: true
     arguments: >-
       --configuration $(buildConfiguration)
-      -p:Version=$(SemVer)
-      -p:AssemblyVersion=$(AssemblySemVer)
-      -p:FileVersion=$(AssemblySemFileVer)
+      -p:Version=$(gitversion.SemVer)
+      -p:AssemblyVersion=$(gitversion.AssemblySemVer)
+      -p:FileVersion=$(gitversion.AssemblySemFileVer)
 
 - task: DotNetCoreCLI@2
   displayName: dotnet test
@@ -71,7 +68,7 @@ steps:
 - task: PublishCodeCoverageResults@1
   inputs:
     codeCoverageTool: 'Cobertura'
-    summaryFileLocation: '$(coverageResultFolder)/$(coverageResultFile)'
+    summaryFileLocation: '$(coverageResultFolder)/coverage.cobertura.xml'
     reportDirectory: '$(coverageResultFolder)/Report/'
 
 - task: CopyFiles@2
@@ -87,7 +84,9 @@ steps:
   displayName: push
   inputs:
     command: 'push'
-    packagesToPush: $(Build.ArtifactStagingDirectory)/TA.FluentValidation.Extensions.Options.*.nupkg;$(Build.ArtifactStagingDirectory)/TA.FluentValidation.Extensions.Options.*.snupkg
+    packagesToPush: >-
+      $(Build.ArtifactStagingDirectory)/TA.FluentValidation.Extensions.Options.*.nupkg;
+      $(Build.ArtifactStagingDirectory)/TA.FluentValidation.Extensions.Options.*.snupkg
     nuGetFeedType: 'internal'
     publishVstsFeed: '4d1c4152-03cc-47a1-aee1-10900ef42719/fded308d-c9f7-48bb-a54c-c44843317463'
 
@@ -104,7 +103,7 @@ steps:
     action: 'create'
     target: '$(Build.SourceVersion)'
     tagSource: 'userSpecifiedTag'
-    tag: '$(SemVer)'
+    tag: '$(gitversion.SemVer)'
     releaseNotesSource: 'inline'
     assets: |
       $(Build.ArtifactStagingDirectory)/TA.FluentValidation.Extensions.Options.*.nupkg
