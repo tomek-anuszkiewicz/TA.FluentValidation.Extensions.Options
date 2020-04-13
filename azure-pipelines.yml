@@ -80,15 +80,14 @@ steps:
       TA.FluentValidation.Extensions.Options.*.snupkg
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
-- task: DotNetCoreCLI@2
-  displayName: push
-  inputs:
-    command: 'push'
-    packagesToPush: >-
-      $(Build.ArtifactStagingDirectory)/TA.FluentValidation.Extensions.Options.*.nupkg;
-      $(Build.ArtifactStagingDirectory)/TA.FluentValidation.Extensions.Options.*.snupkg
-    nuGetFeedType: 'internal'
-    publishVstsFeed: '4d1c4152-03cc-47a1-aee1-10900ef42719/fded308d-c9f7-48bb-a54c-c44843317463'
+- script: > 
+    dotnet nuget push 
+    $(Build.ArtifactStagingDirectory)/TA.FluentValidation.Extensions.Options.*.nupkg 
+    -k $NUGET_API_KEY 
+    -s https://api.nuget.org/v3/index.json
+  displayName: dotnet nuget push
+  env:
+    NUGET_API_KEY: $(NUGET_API_KEY)
 
 - task: PublishBuildArtifacts@1
   inputs:
