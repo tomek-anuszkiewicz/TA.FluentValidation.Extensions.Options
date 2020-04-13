@@ -94,7 +94,7 @@ steps:
   inputs:
     pathToPublish: $(Build.ArtifactStagingDirectory)
     artifactName: Nuget package
-
+  
 - task: GitHubRelease@1
   displayName: create github release
   inputs:  
@@ -105,8 +105,8 @@ steps:
     tagSource: 'userSpecifiedTag'
     tag: '$(gitversion.SemVer)'
     releaseNotesSource: 'inline'
+    changeLogCompareToRelease: 'lastFullRelease'
+    changeLogType: 'commitBased'
     assets: |
       $(Build.ArtifactStagingDirectory)/TA.FluentValidation.Extensions.Options.*.nupkg
       $(Build.ArtifactStagingDirectory)/TA.FluentValidation.Extensions.Options.*.snupkg
-    changeLogCompareToRelease: 'lastFullRelease'
-    changeLogType: 'commitBased'
