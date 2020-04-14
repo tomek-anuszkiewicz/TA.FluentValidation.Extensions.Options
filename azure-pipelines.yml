@@ -59,10 +59,10 @@ steps:
   inputs:
     command: 'test'
     arguments: >-
-      --configuration $(buildConfiguration) 
+      --configuration $(buildConfiguration)
       --no-build
-      -p:CollectCoverage=true 
-      -p:CoverletOutputFormat=cobertura 
+      -p:CollectCoverage=true
+      -p:CoverletOutputFormat=cobertura
       -p:CoverletOutput=$(coverageResultFolder)
 
 - task: PublishCodeCoverageResults@1
@@ -76,18 +76,18 @@ steps:
   inputs:
     SourceFolder: '$(Build.SourcesDirectory)/src/TA.FluentValidation.Extensions.Options/bin/Release'
     Contents: |
-      TA.FluentValidation.Extensions.Options.*.nupkg
-      TA.FluentValidation.Extensions.Options.*.snupkg
+      TA.FluentValidation.Extensions.Options.$(gitversion.SemVer).nupkg
+      TA.FluentValidation.Extensions.Options.$(gitversion.SemVer).snupkg
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
-- script: > 
-    dotnet nuget push 
-    $(Build.ArtifactStagingDirectory)/TA.FluentValidation.Extensions.Options.*.nupkg 
-    -k $NUGET_API_KEY 
+- script: >
+    dotnet nuget push
+    $(Build.ArtifactStagingDirectory)/TA.FluentValidation.Extensions.Options.$(gitversion.SemVer).nupkg
+    -k $NUGET_API_KEY
     -s https://api.nuget.org/v3/index.json
   displayName: dotnet nuget push
   env:
-    NUGET_API_KEY: $(NUGET_API_KEY)
+    NUGET_API_KEY: $(NUGETAPIKEYTAFLUENTVALIDATIONEXTENSIONSOPTIONS)
 
 - task: PublishBuildArtifacts@1
   inputs:
@@ -106,6 +106,33 @@ steps:
     releaseNotesSource: 'inline'
     changeLogCompareToRelease: 'lastFullRelease'
     changeLogType: 'commitBased'
-    assets: |
-      $(Build.ArtifactStagingDirectory)/TA.FluentValidation.Extensions.Options.*.nupkg
-      $(Build.ArtifactStagingDirectory)/TA.FluentValidation.Extensions.Options.*.snupkg
+    assets: |-
+      $(Build.ArtifactStagingDirectory)/TA.FluentValidation.Extensions.Options.$(gitversion.SemVer).nupkg
+      $(Build.ArtifactStagingDirectory)/TA.FluentValidation.Extensions.Options.$(gitversion.SemVer).snupkg
+
+- task: GitHubRelease@1
+  displayName: delete github release
+  condition: failed()
+  inputs:
+    gitHubConnection: 'github.com_tomek-anuszkiewicz'
+    repositoryName: '$(Build.Repository.Name)'
+    action: 'delete'
+    tag: '$(gitversion.SemVer)'
+
+- script: > 
+    dotnet nuget delete
+    TA.FluentValidation.Extensions.Options $(gitversion.SemVer)
+    --non-interactive
+    -k $NUGET_API_KEY
+    -s https://api.nuget.org/v3/index.json
+  displayName: dotnet nuget delete
+  condition: failed()
+  env:
+    NUGET_API_KEY: $(NUGETAPIKEYTAFLUENTVALIDATIONEXTENSIONSOPTIONS)
+
+- script: >
+    git push https://tomek-anuszkiewicz:$GITHUB_PAK@github.com/tomek-anuszkiewicz/TA.FluentValidation.Extensions.Options --delete $(gitversion.SemVer)
+  displayName: git delete tag
+  condition: failed()
+  env:
+    GITHUB_PAK: $(GITHUBPAKTAFLUENTVALIDATIONEXTENSIONSOPTIONS)
