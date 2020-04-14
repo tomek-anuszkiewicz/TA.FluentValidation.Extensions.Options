@@ -1,15 +1,15 @@
 With this package you can easily validate your configuration with [FluentValidation](https://fluentvalidation.net/). 
 You may also opt-in to trigger validation on startup. 
 
-![](https://dev.azure.com/tomekanuszkiewicz/TA.FluentValidation.Extensions.Options/_apis/build/status/tomek-anuszkiewicz.TA.FluentValidation.Extensions.Options?branchName=master) 
+[![Azure pipelines](https://dev.azure.com/tomekanuszkiewicz/TA.FluentValidation.Extensions.Options/_apis/build/status/tomek-anuszkiewicz.TA.FluentValidation.Extensions.Options?branchName=master)](https://dev.azure.com/tomekanuszkiewicz/TA.FluentValidation.Extensions.Options/_build?definitionId=1&_a=summary)
 &nbsp;
-![Azure DevOps tests](https://img.shields.io/azure-devops/tests/tomekanuszkiewicz/TA.FluentValidation.Extensions.Options/1)
+[![Azure DevOps tests](https://img.shields.io/azure-devops/tests/tomekanuszkiewicz/TA.FluentValidation.Extensions.Options/1)](https://dev.azure.com/tomekanuszkiewicz/TA.FluentValidation.Extensions.Options/_build?definitionId=1&_a=summary)
 &nbsp;
-![Azure DevOps coverage](https://img.shields.io/azure-devops/coverage/tomekanuszkiewicz/TA.FluentValidation.Extensions.Options/1)
+[![Azure DevOps coverage](https://img.shields.io/azure-devops/coverage/tomekanuszkiewicz/TA.FluentValidation.Extensions.Options/1)](https://dev.azure.com/tomekanuszkiewicz/TA.FluentValidation.Extensions.Options/_build?definitionId=1&_a=summary)
 &nbsp;
-![Nuget](https://img.shields.io/nuget/v/TA.FluentValidation.Extensions.Options)
+[![Nuget](https://img.shields.io/nuget/v/TA.FluentValidation.Extensions.Options)](https://www.nuget.org/packages/TA.FluentValidation.Extensions.Options/)
 &nbsp;
-![Licence](https://img.shields.io/github/license/tomek-anuszkiewicz/TA.FluentValidation.Extensions.Options)
+[![Licence](https://img.shields.io/github/license/tomek-anuszkiewicz/TA.FluentValidation.Extensions.Options)](https://github.com/tomek-anuszkiewicz/TA.FluentValidation.Extensions.Options/blob/master/LICENSE)
 
 ### 1. Prerequisites
 
