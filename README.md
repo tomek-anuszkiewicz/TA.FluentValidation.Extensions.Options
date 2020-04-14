@@ -7,7 +7,9 @@ You may also opt-in to trigger validation on startup.
 &nbsp;
 ![Azure DevOps coverage](https://img.shields.io/azure-devops/coverage/tomekanuszkiewicz/TA.FluentValidation.Extensions.Options/1)
 &nbsp;
-![GitHub](https://img.shields.io/github/license/tomek-anuszkiewicz/TA.FluentValidation.Extensions.Options)
+![Nuget](https://img.shields.io/nuget/v/TA.FluentValidation.Extensions.Options)
+&nbsp;
+![Licence](https://img.shields.io/github/license/tomek-anuszkiewicz/TA.FluentValidation.Extensions.Options)
 
 ### 1. Prerequisites
 
