@@ -41,7 +41,7 @@ steps:
     arguments: '--configuration $(buildConfiguration)'
 
 - task: DotNetCoreCLI@2
-  displayName: dotnet build
+  displayName: dotnet build for test
   inputs:
     command: build
     arguments: >-
@@ -49,6 +49,7 @@ steps:
       -p:Version=$(gitversion.SemVer)
       -p:AssemblyVersion=$(gitversion.AssemblySemVer)
       -p:FileVersion=$(gitversion.AssemblySemFileVer)
+      -p:IsBuildServer=false
 
 - task: DotNetCoreCLI@2
   displayName: dotnet test
@@ -66,6 +67,24 @@ steps:
     codeCoverageTool: 'Cobertura'
     summaryFileLocation: '$(coverageResultFolder)/coverage.cobertura.xml'
     reportDirectory: '$(coverageResultFolder)/Report/'
+
+- task: DotNetCoreCLI@2
+  displayName: dotnet clean
+  inputs:
+    command: 'custom'
+    custom: 'clean'
+    arguments: '--configuration $(buildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  displayName: dotnet build for push
+  inputs:
+    command: build
+    arguments: >-
+      --configuration $(buildConfiguration)
+      -p:Version=$(gitversion.SemVer)
+      -p:AssemblyVersion=$(gitversion.AssemblySemVer)
+      -p:FileVersion=$(gitversion.AssemblySemFileVer)
+      -p:IsBuildServer=true
 
 - task: CopyFiles@2
   displayName: copy nuget for push

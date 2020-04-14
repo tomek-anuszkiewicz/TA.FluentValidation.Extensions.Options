@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -13,9 +13,9 @@
     <PackageReleaseNotes>Release notes are at https://github.com/tomek-anuszkiewicz/TA.FluentValidation.Extensions.Options/releases</PackageReleaseNotes>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+  <PropertyGroup Condition="'$(IsBuildServer)'=='true'">
     <Deterministic>true</Deterministic>
-    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild> 
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
   </PropertyGroup>
 
