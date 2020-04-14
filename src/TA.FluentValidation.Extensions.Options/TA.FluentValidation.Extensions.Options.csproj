@@ -10,6 +10,8 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <RepositoryType>git</RepositoryType>
+    <Deterministic>true</Deterministic>
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
     <PackageReleaseNotes>Release notes are at https://github.com/tomek-anuszkiewicz/TA.FluentValidation.Extensions.Options/releases</PackageReleaseNotes>
   </PropertyGroup>
 
