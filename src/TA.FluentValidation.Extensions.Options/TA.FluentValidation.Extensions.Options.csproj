@@ -12,7 +12,6 @@
     <RepositoryType>git</RepositoryType>
     <Deterministic>true</Deterministic>
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <PackageReleaseNotes>Release notes are at https://github.com/tomek-anuszkiewicz/TA.FluentValidation.Extensions.Options/releases</PackageReleaseNotes>
   </PropertyGroup>
@@ -26,7 +25,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="packages.lock.json" />
     <None Remove="TA.FluentValidation.Extensions.Options.xml" />
   </ItemGroup>
 

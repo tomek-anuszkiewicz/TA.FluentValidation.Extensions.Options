@@ -3,11 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Content Remove="packages.lock.json" />
-  </ItemGroup>
-
+  
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="8.6.2" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="8.6.2" />
