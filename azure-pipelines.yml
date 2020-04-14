@@ -1,5 +1,8 @@
 trigger:
 - master
+- feature/*
+pr:
+- master
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -79,6 +82,7 @@ steps:
     -k $NUGET_API_KEY
     -s https://api.nuget.org/v3/index.json
   displayName: dotnet nuget push
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   env:
     NUGET_API_KEY: $(NUGETAPIKEYTAFLUENTVALIDATIONEXTENSIONSOPTIONS)
 
@@ -89,6 +93,7 @@ steps:
   
 - task: GitHubRelease@1
   displayName: create github release
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   inputs:  
     gitHubConnection: 'github.com_tomek-anuszkiewicz'
     repositoryName: '$(Build.Repository.Name)'
@@ -105,7 +110,7 @@ steps:
 
 - task: GitHubRelease@1
   displayName: delete github release
-  condition: failed()
+  condition: and(failed(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   inputs:
     gitHubConnection: 'github.com_tomek-anuszkiewicz'
     repositoryName: '$(Build.Repository.Name)'
@@ -119,13 +124,13 @@ steps:
     -k $NUGET_API_KEY
     -s https://api.nuget.org/v3/index.json
   displayName: dotnet nuget delete
-  condition: failed()
+  condition: and(failed(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   env:
     NUGET_API_KEY: $(NUGETAPIKEYTAFLUENTVALIDATIONEXTENSIONSOPTIONS)
 
 - script: >
     git push https://tomek-anuszkiewicz:$GITHUB_PAK@github.com/tomek-anuszkiewicz/TA.FluentValidation.Extensions.Options --delete $(gitversion.SemVer)
   displayName: git delete tag
-  condition: failed()
+  condition: and(failed(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   env:
     GITHUB_PAK: $(GITHUBPAKTAFLUENTVALIDATIONEXTENSIONSOPTIONS)
