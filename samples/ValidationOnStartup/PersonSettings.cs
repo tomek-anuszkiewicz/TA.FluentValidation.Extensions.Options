@@ -1,6 +1,6 @@
 ﻿namespace ValidationOnStartup
 {
-    public class  PersonSettings
+    public class PersonSettings
     {
         public int Age { get; set; }
 
