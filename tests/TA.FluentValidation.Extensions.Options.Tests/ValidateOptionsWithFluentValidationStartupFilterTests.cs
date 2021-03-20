@@ -11,7 +11,6 @@ namespace TA.FluentValidation.Extensions.Options.Tests
 {
     public class ValidateOptionsWithFluentValidationStartupFilterTests
     {
-        [SuppressMessage("Design", "CA1034:Nested types should not be visible", Justification = "Must be public to create mock")]
         public class ValidateOptionsWithFluentValidationOnStartup : IValidateOptionsWithFluentValidationOnStartup
         {
             public int Counter { get; set; } = 0;
