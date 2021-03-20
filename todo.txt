@@ -1,2 +1,0 @@
-https://github.com/FluentValidation/FluentValidation/issues/969
-https://github.com/iron9light/FluentValidation.Extensions
