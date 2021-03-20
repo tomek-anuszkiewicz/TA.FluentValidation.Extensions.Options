@@ -21,6 +21,7 @@
 
   <PropertyGroup>
     <DocumentationFile>TA.FluentValidation.Extensions.Options.xml</DocumentationFile>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
   </PropertyGroup>
 
   <ItemGroup>
