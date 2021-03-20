@@ -12,7 +12,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Solution Items", "_Solutio
 		Directory.Build.props = Directory.Build.props
 		GitVersion.yml = GitVersion.yml
 		README.md = README.md
-		todo.txt = todo.txt
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{913E0850-4B81-435A-AF58-6E1814751602}"
