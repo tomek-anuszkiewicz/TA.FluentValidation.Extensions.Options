@@ -13,12 +13,6 @@
     <PackageReleaseNotes>Release notes are at https://github.com/tomek-anuszkiewicz/TA.FluentValidation.Extensions.Options/releases</PackageReleaseNotes>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(IsBuildServer)'=='true'">
-    <Deterministic>true</Deterministic>
-    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild> 
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
-  </PropertyGroup>
-
   <PropertyGroup>
     <DocumentationFile>TA.FluentValidation.Extensions.Options.xml</DocumentationFile>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
