@@ -9,148 +9,142 @@ pool:
 
 variables:
   buildConfiguration: 'Release'
-  coverageResultFolder: '$(Build.SourcesDirectory)/TestResults/Coverage/'
-  NUGET_PACKAGES: $(Pipeline.Workspace)/.nuget/packages
+  disable.coverage.autogenerate: 'true'
 
 steps:
 
-- task: DotNetCoreCLI@2
-  displayName: install gitversion
+- task: gitversion/setup@0
+  displayName: Install GitVersion
   inputs:
-    command: 'custom'
-    custom: 'tool'
-    arguments: 'install gitversion.tool --tool-path .'
-    includeNuGetOrg: true
+    versionSpec: '5.x'
 
-
-- script: ./dotnet-gitversion > gitversion.json
-  displayName: get gitversion
-
-- task: oneLuckiDevJson2Variable@1
-  displayName: parse gitversion
+- task: gitversion/execute@0
+  displayName: Execute GitVersion
   inputs:
-    jsonFile: 'gitversion.json'
-    shouldPrefixVariables: true
-    variablePrefix: 'gitversion'
+    targetPath: '$(System.DefaultWorkingDirectory)'
+
+- powershell: echo "##vso[task.setvariable variable=nugetPath]$(System.DefaultWorkingDirectory)/src/TA.FluentValidation.Extensions.Options/bin/Release/TA.FluentValidation.Extensions.Options.$(SemVer)"
+  displayName: Set $(nugetPath)
 
 - task: DotNetCoreCLI@2
-  displayName: dotnet clean
+  displayName: Build
   inputs:
-    command: 'custom'
-    custom: 'clean'
-    arguments: '--configuration $(buildConfiguration)'
-
-- task: DotNetCoreCLI@2
-  displayName: dotnet build for test
-  inputs:
-    command: build
+    command: 'build'
     arguments: >-
       --configuration $(buildConfiguration)
-      -p:Version=$(gitversion.SemVer)
-      -p:AssemblyVersion=$(gitversion.AssemblySemVer)
-      -p:FileVersion=$(gitversion.AssemblySemFileVer)
-      -p:IsBuildServer=false
+      -p:Version=$(SemVer)
+      -p:AssemblyVersion=$(AssemblySemVer)
+      -p:FileVersion=$(AssemblySemFileVer)
+      -p:Deterministic=true
+      -p:ContinuousIntegrationBuild=true
+      -warnaserror
 
 - task: DotNetCoreCLI@2
-  displayName: dotnet test
+  displayName: Test
   inputs:
     command: 'test'
+    publishTestResults: false
     arguments: >-
       --configuration $(buildConfiguration)
+      --logger:trx
       --no-build
       -p:CollectCoverage=true
       -p:CoverletOutputFormat=cobertura
-      -p:CoverletOutput=$(coverageResultFolder)
+      -p:Threshold=100
+  continueOnError: true
+
+- task: PublishTestResults@2
+  displayName: Publish test results
+  inputs:
+    testResultsFormat: 'VSTest'
+    testResultsFiles: '**/*.trx'
+    failTaskOnFailedTests: true
+
+- task: reportgenerator@4
+  displayName: Coverage report
+  inputs:
+    reports: '**/coverage.cobertura.xml'
+    targetdir: 'CoverageReport'
+    reporttypes: 'HtmlInline_AzurePipelines'
+    tag: '$(SemVer)'
 
 - task: PublishCodeCoverageResults@1
+  displayName: Publish code coverage results
   inputs:
+    failIfCoverageEmpty: true
     codeCoverageTool: 'Cobertura'
-    summaryFileLocation: '$(coverageResultFolder)/coverage.cobertura.xml'
-    reportDirectory: '$(coverageResultFolder)/Report/'
+    summaryFileLocation: '**/coverage.cobertura.xml'
+    reportDirectory: 'CoverageReport'
 
-- task: DotNetCoreCLI@2
-  displayName: dotnet clean
-  inputs:
-    command: 'custom'
-    custom: 'clean'
-    arguments: '--configuration $(buildConfiguration)'
-
-- task: DotNetCoreCLI@2
-  displayName: dotnet build for push
-  inputs:
-    command: build
-    arguments: >-
-      --configuration $(buildConfiguration)
-      -p:Version=$(gitversion.SemVer)
-      -p:AssemblyVersion=$(gitversion.AssemblySemVer)
-      -p:FileVersion=$(gitversion.AssemblySemFileVer)
-      -p:IsBuildServer=true
-
-- task: CopyFiles@2
-  displayName: copy nuget for push
-  inputs:
-    SourceFolder: '$(Build.SourcesDirectory)/src/TA.FluentValidation.Extensions.Options/bin/Release'
-    Contents: |
-      TA.FluentValidation.Extensions.Options.$(gitversion.SemVer).nupkg
-      TA.FluentValidation.Extensions.Options.$(gitversion.SemVer).snupkg
-    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+- powershell: >-
+    if ((Get-ChildItem -Filter coverage.cobertura.xml -Recurse | Select-String '<coverage line-rate="1" branch-rate="1"' -List).Count -ne 1)
+    { Write-Error "Code coverage is not 100%" }
+  displayName: Code coverage check
 
 - script: >
     dotnet nuget push
-    $(Build.ArtifactStagingDirectory)/TA.FluentValidation.Extensions.Options.$(gitversion.SemVer).nupkg
+    $(nugetPath).nupkg
     -k $NUGET_API_KEY
     -s https://api.nuget.org/v3/index.json
-  displayName: dotnet nuget push
+  displayName: Push nuget
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   env:
-    NUGET_API_KEY: $(NUGETAPIKEYTAFLUENTVALIDATIONEXTENSIONSOPTIONS)
+    NUGET_API_KEY: $(NugetApiKeyTAFluentValidationExtensionsOptions)
 
-- task: PublishBuildArtifacts@1
+- task: CopyFiles@2
+  displayName: Prepare pipeline artifact to publish
   inputs:
-    pathToPublish: $(Build.ArtifactStagingDirectory)
-    artifactName: Nuget package
-  
+    flattenFolders: true
+    Contents: |
+      **/*.nupkg
+      **/*.snupkg
+    TargetFolder: 'NugetPipelineArtifacts'
+
+- publish: 'NugetPipelineArtifacts'
+  displayName: 'Publish pipeline artifact - nuget'
+  artifact: 'Nuget package'
+ 
 - task: GitHubRelease@1
-  displayName: create github release
+  displayName: Create github release
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   inputs:  
     gitHubConnection: 'github.com_tomek-anuszkiewicz'
-    title: '$(gitversion.SemVer)'
+    title: '$(SemVer)'
     repositoryName: '$(Build.Repository.Name)'
     action: 'create'
     target: '$(Build.SourceVersion)'
     tagSource: 'userSpecifiedTag'
-    tag: '$(gitversion.SemVer)'
+    tag: '$(SemVer)'
     releaseNotesSource: 'inline'
     changeLogCompareToRelease: 'lastFullRelease'
     changeLogType: 'commitBased'
     assets: |-
-      $(Build.ArtifactStagingDirectory)/TA.FluentValidation.Extensions.Options.$(gitversion.SemVer).nupkg
-      $(Build.ArtifactStagingDirectory)/TA.FluentValidation.Extensions.Options.$(gitversion.SemVer).snupkg
+      $(nugetPath).nupkg
+      $(nugetPath).snupkg
 
 - task: GitHubRelease@1
-  displayName: delete github release
+  displayName: Delete github release
   condition: and(failed(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   inputs:
     gitHubConnection: 'github.com_tomek-anuszkiewicz'
     repositoryName: '$(Build.Repository.Name)'
     action: 'delete'
-    tag: '$(gitversion.SemVer)'
+    tag: '$(SemVer)'
 
 - script: > 
     dotnet nuget delete
-    TA.FluentValidation.Extensions.Options $(gitversion.SemVer)
+    TA.FluentValidation.Extensions.Options $(SemVer)
     --non-interactive
     -k $NUGET_API_KEY
     -s https://api.nuget.org/v3/index.json
-  displayName: dotnet nuget delete
+  displayName: Delete nuget
   condition: and(failed(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   env:
-    NUGET_API_KEY: $(NUGETAPIKEYTAFLUENTVALIDATIONEXTENSIONSOPTIONS)
+    NUGET_API_KEY: $(NugetApiKeyTAFluentValidationExtensionsOptions)
 
 - script: >
-    git push https://tomek-anuszkiewicz:$GITHUB_PAK@github.com/tomek-anuszkiewicz/TA.FluentValidation.Extensions.Options --delete $(gitversion.SemVer)
-  displayName: git delete tag
+    git push https://tomek-anuszkiewicz:$GITHUB_PAK@github.com/tomek-anuszkiewicz/TA.FluentValidation.Extensions.Options --delete $(SemVer)
+  displayName: Delete git tag
   condition: and(failed(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   env:
-    GITHUB_PAK: $(GITHUBPAKTAFLUENTVALIDATIONEXTENSIONSOPTIONS)
+    GITHUB_PAK: $(GitHubPakTAFluentValidationExtensionsOptions)
